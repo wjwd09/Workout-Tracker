@@ -17,3 +17,22 @@ app.use("/liftNumbers", liftNumbers);
 app.listen(port, function () {
   console.log(`Example app listening on port ${port}!`);
 });
+
+const mongoose = require("mongoose");
+
+//setting up mongoose
+mongoose.connect(
+    process.env.MONGODB_URI || "mongodb://localhost/workoutapp",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
+    (err) => {
+      if(err){
+        console.log(err);
+      }
+      else {
+        console.log("Connected to MonogDB");
+      }
+    }
+);
