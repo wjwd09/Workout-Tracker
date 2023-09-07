@@ -14,8 +14,7 @@ const liftNumbersSchema = new Schema({
     },
     Weight: {
         type: String,
-        default: 0,
-        required: true
+        default: 0
     }
 });
 
