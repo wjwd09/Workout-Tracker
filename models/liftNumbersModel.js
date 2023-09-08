@@ -18,4 +18,24 @@ const liftNumbersSchema = new Schema({
     }
 });
 
+const workoutSchema = new Schema({
+    Name: {
+        type: String,
+        required: true
+    },
+    daysPerWeek: {
+        type: String,
+        required: true
+    },
+    split : [{
+        Day: {
+        type: String,
+        required: true
+        },
+        Exercises: [liftNumbersSchema]
+    }]
+});
+
+
+
 module.exports = mongoose.model("liftNumbersModel", liftNumbersSchema);
