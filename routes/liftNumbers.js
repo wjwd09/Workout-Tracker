@@ -20,9 +20,33 @@ router.get('/:id', getExercise, (req, res) => {
 //Create one lift
 router.post('/', async (req, res) => {
   const lift = new liftNumbers({
-    Exercise: req.body.Exercise,
-    Weight: req.body.Weight
+    Name: req.body.Workout,
+    daysPerWeek: req.body.Days
   })
+
+  let splitArr = Object.keys(req.body.split);
+  for(let i = 0; i < splitArr.length; i++){
+    lift.split.push({
+      Day: splitArr[i]
+    })
+
+    let exerciseArr = req.body.split[splitArr[i]]
+    for(let j = 0; j < exerciseArr.length; j++){
+      lift.split[i].Exercises.push({
+        Exercise: exerciseArr[j].Exercise
+      })
+      if(exerciseArr[j].Sets != null){
+        lift.split[i].Exercises[j].Sets = exerciseArr[j].Sets;
+      }
+      if(exerciseArr[j].Reps != null){
+        lift.split[i].Exercises[j].Reps = exerciseArr[j].Reps;
+      }
+      if(exerciseArr[j].Weight != null){
+        lift.split[i].Exercises[j].Weight = exerciseArr[j].Weight;
+      }
+    }
+  }
+
   try {
     const newLift = await lift.save()
     res.status(202).json(newLift);
@@ -45,6 +69,10 @@ router.patch('/:id', getExercise, async (req, res) => {
   } catch(err){
     res.status(400).json({message: err.message});
   }
+})
+
+router.patch('/:id/:day', getExercise, async (req, res) => {
+  
 })
 
 //Delete one lift

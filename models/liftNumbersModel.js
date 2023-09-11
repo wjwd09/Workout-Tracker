@@ -21,7 +21,8 @@ const liftNumbersSchema = new Schema({
 const workoutSchema = new Schema({
     Name: {
         type: String,
-        required: true
+        required: true,
+        unqiue: true
     },
     daysPerWeek: {
         type: String,
@@ -38,4 +39,4 @@ const workoutSchema = new Schema({
 
 
 
-module.exports = mongoose.model("liftNumbersModel", liftNumbersSchema);
+module.exports = mongoose.model("liftNumbersModel", workoutSchema);
