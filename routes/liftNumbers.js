@@ -72,7 +72,49 @@ router.patch('/:id', getExercise, async (req, res) => {
 })
 
 router.patch('/:id/:day', getExercise, async (req, res) => {
+  let day;
+  for(let i = 0; i < res.exercise.split.length; i++){
+    if(res.exercise.split[i].Day == req.params.day){
+      day = res.exercise.split[i];
+      break;
+    }
+  }
   
+  if(req.body._id == null){
+    res.status(404).json({message : "Must provide exercise _id field"});
+  }
+  else{
+    let exercise;
+    for(let i = 0; i < day.Exercises.length; i++){
+      if(req.body._id == day.Exercises[i]._id){
+        exercise = day.Exercises[i];
+        break;
+      }
+    }
+    if(exercise == null){
+      res.status(404).json({message : "Exercise not found"});
+    }
+
+    if(req.body.Exercise != null){
+      exercise.Exercise = req.body.Exercise;
+    }
+    if(req.body.Sets != null){
+      exercise.Sets = req.body.Sets;
+    }
+    if(req.body.Reps != null){
+      exercise.Reps = req.body.Reps;
+    }
+    if(req.body.Weight != null){
+      exercise.Weight = req.body.Weight;
+    }
+
+    try{
+      const updatedLift = await res.exercise.save();
+      res.json(updatedLift);
+    } catch(err){
+      res.status(400).json({message: err.message});
+    }
+  }
 })
 
 //Delete one lift
