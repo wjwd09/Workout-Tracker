@@ -1,9 +1,27 @@
-{"Workouts" : 
-    [ {"PushPullLegs" :
-        [ {"Push" : [
-            {"Exercises" :
-                []}
-            ]} 
-        ]}
-    ]
+//Input format for creating workout
+{
+    "Workout": "PPL",
+    "Days": "5",
+    "split" : {
+        "Push": [
+            {
+                "Exercise" : "DB Bench Press",
+                "Sets" : "3",
+                "Reps" : "5",
+                "Weight" : "70"
+            },
+            {
+                "Exercise" : "Shoulder Press",
+                "Sets" : "2",
+                "Reps" : "10",
+                "Weight" : "50"
+            }
+        ],
+        "Pull" : [
+            {"Exercise" : "Pullups"}
+        ],
+        "Legs" : [
+            {"Exercise" : "Squat"}
+        ]
+    }
 }
