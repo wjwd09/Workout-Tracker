@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const liftNumbersSchema = new Schema({
     Exercise: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     Sets: {
         type: String
