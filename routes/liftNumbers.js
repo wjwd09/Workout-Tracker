@@ -55,13 +55,13 @@ router.post('/', async (req, res) => {
   }
 })
 
-//Update one lift
+//Update workout
 router.patch('/:id', getExercise, async (req, res) => {
-  if(req.body.Exercise != null){
-    res.exercise.Exercise = req.body.Exercise;
+  if(req.body.Name != null){
+    res.exercise.Name = req.body.Name;
   }
-  if(req.body.Weight != null){
-    res.exercise.Weight = req.body.Weight;
+  if(req.body.Days != null){
+    res.exercise.Days = req.body.Days;
   }
   try{
     const updatedLift = await res.exercise.save();
@@ -71,6 +71,7 @@ router.patch('/:id', getExercise, async (req, res) => {
   }
 })
 
+//Update exercise given day and exercise _id
 router.patch('/:id/:day', getExercise, async (req, res) => {
   let day;
   for(let i = 0; i < res.exercise.split.length; i++){
@@ -117,14 +118,46 @@ router.patch('/:id/:day', getExercise, async (req, res) => {
   }
 })
 
-//Delete one lift
+//Delete one workout
 router.delete('/:id', getExercise, async (req, res) => {
   try {
     await res.exercise.deleteOne();
-    res.json({message: "Deleted exercise"});
+    res.json({message: "Deleted workout"});
   } catch(err){
     res.status(500).json({message: err.message});
   }
+})
+
+//Delete one exercise given day and workout id
+router.delete('/:id/:day', getExercise, async (req, res) =>{
+  let day;
+  for(let i = 0; i < res.exercise.split.length; i++){
+    if(res.exercise.split[i].Day == req.params.day){
+      day = res.exercise.split[i];
+      break;
+    }
+  }
+if(day == null){
+  return res.status(404).json({message: "Can't find day"});
+}
+if(req.body._id == null){
+  return res.status(404).json({message: "Must provide exercise id"});
+}
+
+for(let i = 0; i < day.Exercises.length; i++){
+  if(day.Exercises[i]._id == req.body._id){
+    day.Exercises.splice(i,1);
+    break;
+  }
+}
+
+try{
+  const updatedLift = await res.exercise.save();
+  res.json("Deleted exercise");
+} catch(err){
+  res.status(400).json({message: err.message});
+}
+
 })
 
 async function getExercise(req, res, next){
@@ -132,7 +165,7 @@ async function getExercise(req, res, next){
   try {
     exercise = await liftNumbers.findById(req.params.id);
     if(exercise == null){
-      return res.status(404).json({message: "Can't find exercise"});
+      return res.status(404).json({message: "Can't find workout"});
     }
   } catch (err){
     return res.status(500).json({message: err.message});
