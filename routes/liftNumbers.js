@@ -17,7 +17,7 @@ router.get('/:id', getExercise, (req, res) => {
   res.send(res.exercise);
 })
 
-//Create one lift
+//Create one workout
 router.post('/', async (req, res) => {
   const lift = new liftNumbers({
     Name: req.body.Workout,
@@ -55,7 +55,47 @@ router.post('/', async (req, res) => {
   }
 })
 
-//Update workout
+//Create one exercise given day
+router.post('/:id/:day', getExercise, async (req, res) => {
+  let day;
+  for(let i = 0; i < res.exercise.split.length; i++){
+    if(res.exercise.split[i].Day == req.params.day){
+      day = res.exercise.split[i];
+      break;
+    }
+  }
+  if(day == null){
+    res.status(404).json("Can't find day");
+  }
+  if(req.body.Exercise == null){
+    res.status(404).json("Must provide exercise name in body");
+  }
+
+  day.Exercises.push({
+    Exercise: req.body.Exercise
+  })
+  exerciseIdx = day.Exercises.length - 1;
+  if(req.body.Sets != null){
+    day.Exercises[exerciseIdx].Sets = req.body.Sets;
+  }
+  if(req.body.Reps != null){
+    day.Exercises[exerciseIdx].Reps = req.body.Reps;
+  }
+  if(req.body.Weight != null){
+    day.Exercises[exerciseIdx].Weight = req.body.Weight;
+  }
+
+  try {
+    const newLift = await res.exercise.save()
+    res.status(202).json(newLift);
+  } catch(err) {
+    res.status(400).json({message: err.message});
+  }
+
+})
+
+
+//Update workout given id
 router.patch('/:id', getExercise, async (req, res) => {
   if(req.body.Name != null){
     res.exercise.Name = req.body.Name;
